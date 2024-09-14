@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Teacher</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.28.1/min/vs/editor/editor.main.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Code Teacher</h1>
+        <div id="level-container"></div>
+        <div id="editor-container"></div>
+        <button id="run-code">Run Code</button>
+        <div id="output-container"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.28.1/min/vs/loader.min.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.28.1/min/vs' }});
+        require(['vs/editor/editor.main'], function() {
+            window.editor = monaco.editor.create(document.getElementById('editor-container'), {
+                value: '',
+                language: 'python',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                wordWrap: 'on',
+                padding: { top: 0, bottom: 0 },
+                lineNumbers: 'on',
+                scrollBeyondLastLine: false,
+                minimap: { enabled: false }
+            });
+            startGame(); // Iniciar o jogo após o carregamento do editor
+        });
+    </script>
+    <script src="js/levels.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
