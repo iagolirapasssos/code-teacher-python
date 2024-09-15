@@ -22,15 +22,20 @@ async function processTest(userCode, expectedCode, variableName, expectedValue) 
 }
 
 // Função geral para testar o código do usuário para funções
-async function processFunctionTest(userCode, expectedCode, functionName, expectedOutput) {
+function processFunctionTest(userCode, functionSignature, functionName, argument) {
     try {
-        await pyodide.runPythonAsync(userCode);
-        const func = pyodide.globals.get(functionName);
-        const result = func();
-        return result === expectedOutput && userCode.includes(expectedCode);
-    } catch (e) {
-        console.error("Function Test Error:", e);
-        return false;
+        // Carrega o código do usuário no Pyodide
+        let pyodide = window.pyodide;
+
+        // Define a função fornecida pelo usuário
+        pyodide.runPython(userCode);
+
+        // Chama a função com o argumento fornecido e retorna o resultado
+        let result = pyodide.runPython(`${functionName}(${argument})`);
+        return result;
+    } catch (error) {
+        console.error("Function Test Error:", error);
+        return `Error: ${error}`;
     }
 }
 
@@ -151,7 +156,8 @@ const levels = [
         code: `def dobro(x):\n    return x * 2`,
         explanation: "Esta função `dobro` retorna o dobro do número fornecido como argumento.",
         test: function (userCode) {
-            return processFunctionTest(userCode, "def dobro(x):", "dobro", 10); // Exemplo com x=5
+            // Vamos garantir que o valor 10 seja passado como argumento da função 'dobro'
+            return processFunctionTest(userCode, "def dobro(x):", "dobro", 10); // Exemplo com x=10
         }
     },
     {

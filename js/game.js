@@ -8,16 +8,9 @@ async function loadLevel(level) {
     `;
     editor.setValue('');
 
-    // Prevent copy-paste on the level container
-    levelContainer.addEventListener('copy', function(event) {
-        event.preventDefault();
-    });
-    levelContainer.addEventListener('cut', function(event) {
-        event.preventDefault();
-    });
-    levelContainer.addEventListener('paste', function(event) {
-        event.preventDefault();
-    });
+    levelContainer.addEventListener('copy', event => event.preventDefault());
+    levelContainer.addEventListener('cut', event => event.preventDefault());
+    levelContainer.addEventListener('paste', event => event.preventDefault());
 }
 
 function getUserCode() {
@@ -32,13 +25,17 @@ function displayOutput(message) {
 async function runCode(level) {
     const userCode = getUserCode();
     const isCorrect = await level.test(userCode);
+    const correctSound = document.getElementById('correct-sound');
+    const errorSound = document.getElementById('error-sound');
 
     if (isCorrect) {
+        correctSound.play();
         displayOutput('Correct! Moving to the next level...');
         setTimeout(() => {
             nextLevel();
         }, 2000);
     } else {
+        errorSound.play();
         displayOutput('Incorrect, try again.');
     }
 }
@@ -50,6 +47,7 @@ function nextLevel() {
         loadLevel(levels[currentLevelIndex]);
         displayOutput('');
     } else {
+        document.getElementById('game-over-sound').play();
         displayOutput('Congratulations! You have completed all levels.');
     }
 }
